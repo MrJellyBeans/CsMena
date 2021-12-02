@@ -21,26 +21,21 @@ function output(input) {
 
   let text = input.toLowerCase().replace(/[\d]/gi, "").trim();
   text = text
-    .replace(/ a /g, " ")   // 'tell me a story' -> 'tell me story'
-    .replace(/i feel /g, "")
-    .replace(/whats/g, "what is")
-    .replace(/please /g, "")
-    .replace(/ please/g, "")
-    .replace(/r u/g, "are you");
-
+    .replace(/(\?|؟|!|!|\*)/gi, "")
+    .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
+    .replace(/أ/g, "ا")
+    .replace(/إ/g, "ا")
+    .replace(/آ/g, "ا")
+    .replace(/نتي/g, "نت");
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
     product = compare(prompts, replies, text);
-  } else if (text.match(/thank/gi)) {
-    product = "You're welcome!"
-  } else if (text.match(/كورونا/gi)) {
-    // If no match, check if message contains `coronavirus`
-    product = coronavirus[Math.floor(Math.random() * coronavirus.length)];
+  } else if (text.match(/شكرا/gi)) {
+    product = "العفو"
   } else {
     // If all else fails: random alternative
     product = alternative[Math.floor(Math.random() * alternative.length)];
   }
-console.log(text, product)
   // Update DOM
   addChat(input, product);
 }
