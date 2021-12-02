@@ -19,13 +19,10 @@ function output(input) {
   // Remove digits - not sure if this is best
   // But solves problem of entering something like 'hi1'
 
-  let text = input.toLowerCase().replace(/[\d]/gi, "").trim();
-  text = text
-    .replace(/(\?|؟|!|!|\*)/gi, "")
+  let text = text
+    .replace(/(\?|؟|!|!|\*)/g, "")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
-    .replace(/أ/g, "ا")
-    .replace(/إ/g, "ا")
-    .replace(/آ/g, "ا")
+    .replace(/(أ|إ|آ)/g, "ا")
     .replace(/نتي/g, "نت");
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
@@ -109,7 +106,7 @@ function opening(product) {
 
   setTimeout(() => {
     botText.innerText = `${product}`;
-  }, 1000
+  }, 750
   )
 
 }
