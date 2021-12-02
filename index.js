@@ -128,9 +128,9 @@ function getcar(){
         }
         let cars = rows
         .map(row => `${row.brand}`)
-        console.log(cars)
+        alert(cars)
     });
-    debug(`Connected to "${process.env.DB_NAME}" SQlite database.`);
+    alert(`Connected to "cars" SQlite database.`);
     resolve();
    });
   })
