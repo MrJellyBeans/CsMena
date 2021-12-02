@@ -24,7 +24,7 @@ const prompts = [
 // Possible responses, in corresponding order
 
 const replies = [
-  ["شخص مدهش"],
+  [":D شخص مدهش"],
   ["و عليكم السلام"],
   ["مرحبا", "أهلا"],
   [
