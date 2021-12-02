@@ -1,5 +1,3 @@
-const sql = require('sqlite3').verbose();
-const db = new sql.Database(process.cwd()+'/data/db.db', sql.OPEN_READWRITE)
 document.addEventListener("DOMContentLoaded", () => {
   const inputField = document.getElementById("input");
   inputField.addEventListener("keydown", (e) => {
@@ -35,7 +33,7 @@ function output(input) {
   } else if (text.match(/شكرا/gi)) {
 
     product = "العفو"
-    getcar(db)
+    getcar()
   } else {
     // If all else fails: random alternative
     product = alternative[Math.floor(Math.random() * alternative.length)];
@@ -117,7 +115,12 @@ function opening(product) {
 
 }
 
-function getcar(db){
+function getcar(){
+  const connect = () => new Promise((resolve, reject) => {
+    db = new sqlite3.Database("db.db", (err) => {
+     if (err) {
+      reject(err.message);
+     }
   let query = `SELECT * FROM cars`
   db.all(query, [], async (err, rows) => {
       if (err) {
@@ -127,4 +130,8 @@ function getcar(db){
         .map(row => `${row.brand}`)
         console.log(cars)
     });
+    debug(`Connected to "${process.env.DB_NAME}" SQlite database.`);
+    resolve();
+   });
+  })
 }
