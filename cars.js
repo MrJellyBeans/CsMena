@@ -1,0 +1,37 @@
+const cars = [
+    {
+        name:"نيسان",
+        model:"صني",
+        year:"2019",
+        cost:"50",
+        date:"15/dec-18/dec"
+    },
+    {
+        name:"نيسان",
+        model:"ليف",
+        year:"2019",
+        cost:"50",
+        date:"13/dec-18/dec"
+    },
+    {
+        name:"نيسان",
+        model:"باجيرو",
+        year:"2019",
+        cost:"100",
+        date:"15/dec-20/dec"
+    },
+    {
+        name:"هوندا",
+        model:"سيفك",
+        year:"2020",
+        cost:"40",
+        date:"n/a"
+    },
+    {
+        name:"هونداي",
+        model:"اكسنت",
+        year:"2018",
+        cost:"50",
+        date:"10/dec-19/dec"
+    }
+]
