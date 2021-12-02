@@ -1,3 +1,5 @@
+const sql = require('sqlite3').verbose();
+const db = new sql.Database(process.cwd()+'/data/db.db', sql.OPEN_READWRITE)
 document.addEventListener("DOMContentLoaded", () => {
   const inputField = document.getElementById("input");
   inputField.addEventListener("keydown", (e) => {
@@ -31,7 +33,9 @@ function output(input) {
     // Search for exact match in `prompts`
     product = compare(prompts, replies, text);
   } else if (text.match(/شكرا/gi)) {
+
     product = "العفو"
+    getcar(db)
   } else {
     // If all else fails: random alternative
     product = alternative[Math.floor(Math.random() * alternative.length)];
@@ -111,4 +115,16 @@ function opening(product) {
   }, 1000
   )
 
+}
+
+function getcar(db){
+  let query = `SELECT * FROM cars`
+  db.all(query, [], async (err, rows) => {
+      if (err) {
+          throw err;
+        }
+        let cars = rows
+        .map(row => `${row.brand}`)
+        console.log(cars)
+    });
 }
