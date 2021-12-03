@@ -23,6 +23,8 @@ function output(input) {
     .replace(/(\?|؟|!|!|\*)/g, "")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
+    .replace(/شو|وش|مذا|ايش/g, "ماذا")
+    .replace(/عندك|عندكم|عندكو/g,"لديك")
     .replace(/نتي/g, "نت");
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
