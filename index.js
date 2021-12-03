@@ -18,21 +18,24 @@ function output(input) {
   // Trim trailing whitespce
   // Remove digits - not sure if this is best
   // But solves problem of entering something like 'hi1'
-  
-  let text = input.toLowerCase().replace(/[\d]/gi, "").trim();
+
+  let text = input
   text = text
     .replace(/(\?|؟|!|!|\*)/g, "")
+    .replace(/(  )/g, " ")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
-    .replace(/شو|وش|مذا|ايش/g, "ماذا")
-    .replace(/عندك|عندكم|عندكو/g,"لديك")
-    .replace(/نتي/g, "نت");
+    .replace(/(شو|وش|مذا|ايش)/gi, "ماذا")
+    .replace(/(عندكم|عندكو|لديكم|عندك)/g,"لديك")
+    .replace(/(نتي)/g, "نت");
+    console.log(text)
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
     product = compare(prompts, replies, text);
   } else if (text.match(/شكرا/gi)) {
-    Cars(cars)
     product = "العفو"
+  } else if (text.match(/ماذا لديك سيارات/g)){
+    product = listCars(cars) 
   } else {
     // If all else fails: random alternative
     product = alternative[Math.floor(Math.random() * alternative.length)];
@@ -113,8 +116,10 @@ function opening(product) {
   )
 
 }
-function Cars(cars){
+
+function listCars(cars){
   let list = cars
-  .map(row => `${row.name}`)
-  console.log(list)
+  .map(row => `${row.name} -  ${row.model} - ${row.year}`)
+  .join("\n")
+  return list
 }
