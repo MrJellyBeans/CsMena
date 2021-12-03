@@ -19,7 +19,8 @@ function output(input) {
   // Remove digits - not sure if this is best
   // But solves problem of entering something like 'hi1'
 
-  let text = text
+  let text 
+    text = text
     .replace(/(\?|؟|!|!|\*)/g, "")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
