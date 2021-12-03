@@ -18,9 +18,9 @@ function output(input) {
   // Trim trailing whitespce
   // Remove digits - not sure if this is best
   // But solves problem of entering something like 'hi1'
-
-  let text = input.toLowerCase().trim();
-    text = text
+  
+  let text = input.toLowerCase().replace(/[\d]/gi, "").trim();
+  text = text
     .replace(/(\?|؟|!|!|\*)/g, "")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
