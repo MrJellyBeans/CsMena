@@ -14,13 +14,14 @@ bot(`،يوم سعيد
 كيف يمكن أن أساعدك اليوم؟`)
 function output(input) {
   let product;
-
+  let foundcar
+  let otherStuff = ["2018","2019","2020"]
+  let stuff = ["موقع","تاريخ","موعد"]
   // Regex remove non word/space chars
   // Trim trailing whitespce
-  // Remove digits - not sure if this is best
-  // But solves problem of entering something like 'hi1'
   let text = input
   text = text
+    .replace(/ايش في/g, "ماذا لديك")
     .replace(/(\?|؟|!|!|\*|في |ال|\,|،|\.)/g, "")
     .replace(/ +/g, " ")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
@@ -29,7 +30,9 @@ function output(input) {
     .replace(/بدي/g, "اريد ان")
     .replace(/(شو|وش|مذا|ايش)/gi, "ماذا")
     .replace(/(عندكم|عندكو|لديكم|عندك)/g,"لديك")
+    .replace(/(سياره|سيارة)/g, "سيارات")
     .replace(/(نتي)/g, "نت");
+    let filteredLength = arrayMatch(listNames(cars), text.split(/ +/g)).length
     if(text.length < 5) text = text.replace(/(تمام|اها|اه)/g, "")
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
@@ -37,14 +40,11 @@ function output(input) {
   } else if (text.match(/شكرا/gi)) {
     product = "العفو"
     // Renting phase
-  } else if (text.match(/اريد ان استاجر/gi)) {
-    let foundcar
-    let filteredLength = arrayMatch(listNames(cars), text.split(/ +/g)).length
-     if(filteredLength >= 1){
-        if(arrayMatch(listModels(cars), text.split(/ +/g)).length >= 1){
-          foundcar = cars.filter(x => x.model.includes(arrayMatch(listModels(cars), text.split(/ +/g))[0]))
-          product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
-        }
+  } else if(arrayMatch(listModels(cars), text.split(/ +/g)).length >= 1){
+      foundcar = cars.filter(x => x.model.includes(arrayMatch(listModels(cars), text.split(/ +/g))[0]))
+      product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
+    } else if(filteredLength >= 1){
+
         if (cars.filter(x => x.name.match(arrayMatch(listNames(cars), text.split(/ +/g))[0])).length == 1 ){
       foundcar = cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0]))
       product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
@@ -55,37 +55,43 @@ function output(input) {
        
       } else if (cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0])).length > 1){
         let carList = cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0]))
-        console.log(carList)
         carList = carList.map(x => `#${carList.indexOf(x)+1} ${x.name} مديل  ${x.model} سنت ${x.year}`)
         .join("\n")
         product = `:لدينا اكثر من سيارة لديها الإسم ${arrayMatch(listNames(cars), text.split(/ +/g))[0]} و هم
         ${carList}
-        أرجو إرسال "اريد ان استأجر ${arrayMatch(listNames(cars), text.split(/ +/g))[0]}" مع اسم المديل للإستفسار عن التاريخ و السعر
+        أرجو إرسال اسم المديل للإستفسار عن التاريخ و السعر
         `
 
         
       }
-    } else if (filteredLength == 0){
-      product = `:حاليا السيارات المتوفره هي
-      ${listCars(cars)}
-      أرجو إرسال "اريد ان استأجر " مع اسم المديل للإستفسار عن التاريخ و السعر
-        `
-    }
-
-    // Inquiry phase
-  } else if (text.match(/ماذا لديك سيارات/g)){
-    product = listCars(cars) 
+    } else if(cars.filter(x => x.year.includes(arrayMatch(listYears(cars), text.split(/ +/g))[0])).length == 1){
+      foundcar = cars.filter(x => x.year.includes(arrayMatch(listYears(cars), text.split(/ +/g))[0]))
+      product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
+    } else if(cars.filter(x => x.year.includes(arrayMatch(listYears(cars), text.split(/ +/g))[0])).length > 1){
+      let carList = cars.filter(x => x.year.includes(arrayMatch(listYears(cars), text.split(/ +/g))[0]))
+      carList = carList.map(x => `#${carList.indexOf(x)+1} ${x.name} مديل  ${x.model} سنت ${x.year}`)
+      .join("\n")
+      product = `:لدينا اكثر من سيارة للعام ${arrayMatch(listYears(cars), text.split(/ +/g))[0]} و هم
+      ${carList}
+      أرجو إرسال اسم المديل للإستفسار عن التاريخ و السعر
+      `
+    } else if (text.match(/(اريد ان سيارات|ماذا لديك سيارات)/g)){
+    product = `:حاليا السيارات المتوفره هي
+    ${listCars(cars)}
+    أرجو إرسال اسم المديل للإستفسار عن التاريخ و السعر
+      `
   } else if (text.match(/نعم/g) && log[log.length - 1].startsWith("هل تريد أن تستأجر السياره")) {
     const logged = log[log.length - 1].replace(/(\?|؟|!|!|\*|في |ال|\,|،)/g, "").split(/ +/g)
-    console.log(logged)
     const carName = arrayMatch(listNames(cars), logged)[0]
     const carModel = arrayMatch(listModels(cars), logged)[0]
     product = "تم إرسال رابط للإميل الخاص بك لإتمام الدفع و معرفه المواعيد المناسبه لإستئجار السياره "+ carName +" "+carModel
     log = []
-  } /*else if ( ){
-
-  } */else {
+    
+  } else if (arrayMatch(stuff, text.split(/ +/g)).length >= 1){
+    product = "للإستفسار عن الموقع او المواعيد المتاحه أرجو زياره موقعنا الرأيسي\n :من خلال الرابط التالي"
+  } else {
     // If all else fails: random alternative
+    console.log(text)
     product = alternative[Math.floor(Math.random() * alternative.length)];
   }
   // Update DOM
