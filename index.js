@@ -15,7 +15,6 @@ bot(`،يوم سعيد
 function output(input) {
   let product;
   let foundcar
-  let otherStuff = ["2018","2019","2020"]
   let stuff = ["موقع","تاريخ","موعد"]
   // Regex remove non word/space chars
   // Trim trailing whitespce
@@ -33,7 +32,7 @@ function output(input) {
     .replace(/(سياره|سيارة)/g, "سيارات")
     .replace(/(نتي)/g, "نت");
     let filteredLength = arrayMatch(listNames(cars), text.split(/ +/g)).length
-    if(text.length < 5) text = text.replace(/(تمام|اها|اه)/g, "")
+    //if(text.length < 5) text = text.replace(/(تمام|اها|اه)/g, "")
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
     product = compare(prompts, replies, text);
