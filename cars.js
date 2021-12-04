@@ -33,7 +33,7 @@ const cars = [
     },
     {
         id:"5",
-        name:"هونداي",
+        name:"هيونداي",
         model:"اكسنت",
         year:"2018",
         cost:"50",

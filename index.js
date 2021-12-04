@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+let log = [];
 bot(`،يوم سعيد
 مرحبا! بكم في سي أس مينا لتأجير السيارات
 كيف يمكن أن أساعدك اليوم؟`)
@@ -18,10 +19,9 @@ function output(input) {
   // Trim trailing whitespce
   // Remove digits - not sure if this is best
   // But solves problem of entering something like 'hi1'
-
   let text = input
   text = text
-    .replace(/(\?|؟|!|!|\*|في |ال)/g, "")
+    .replace(/(\?|؟|!|!|\*|في |ال|\,|،|\.)/g, "")
     .replace(/ +/g, " ")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
@@ -29,46 +29,61 @@ function output(input) {
     .replace(/(شو|وش|مذا|ايش)/gi, "ماذا")
     .replace(/(عندكم|عندكو|لديكم|عندك)/g,"لديك")
     .replace(/(نتي)/g, "نت");
-    console.log(text)
   if (compare(prompts, replies, text)) { 
     // Search for exact match in `prompts`
     product = compare(prompts, replies, text);
   } else if (text.match(/شكرا/gi)) {
     product = "العفو"
+    // Renting phase
   } else if (text.match(/اريد ان استاجر/gi)) {
     let foundcar
     let filteredLength = arrayMatch(listNames(cars), text.split(/ +/g)).length
      if(filteredLength >= 1){
 
 
-        if (cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0])).length == 1 ){
+        if (cars.filter(x => x.name.match(arrayMatch(listNames(cars), text.split(/ +/g))[0])).length == 1 ){
       foundcar = cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0]))
-      product = `wewهل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
+      product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
 
       } else if (arrayMatch(listModels(cars), text.split(/ +/g)).length >= 1){
-       foundcar = cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0]))
+       foundcar = cars.filter(x => x.model.includes(arrayMatch(listModels(cars), text.split(/ +/g))[0]))
        product = `هل تريد أن تستأجر السياره ${foundcar[0].name}, مديل ${foundcar[0].model}, بسعر ${foundcar[0].cost} د.أ بليوم؟`
-
+       
       } else if (cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0])).length > 1){
         let carList = cars.filter(x => x.name.includes(arrayMatch(listNames(cars), text.split(/ +/g))[0]))
         console.log(carList)
-        carList = carList.map(x => `    #${carList.indexOf(x)+1} ${x.name} مديل  ${x.model} سنت ${x.year}`)
+        carList = carList.map(x => `#${carList.indexOf(x)+1} ${x.name} مديل  ${x.model} سنت ${x.year}`)
         .join("\n")
         product = `:لدينا اكثر من سيارة لديها الإسم ${arrayMatch(listNames(cars), text.split(/ +/g))[0]} و هم
-        ${carList}`
+        ${carList}
+        أرجو إرسال "اريد ان استاجر ${arrayMatch(listNames(cars), text.split(/ +/g))[0]}" مع اسم المديل للإستفسار عن التاريخ و السعر
+        `
+
+        
       }
-
-
-    } 
+    } else if (filteredLength == 0){
+      product = `:حاليا السيارات المتوفره هي
+      ${listCars(cars)}`
+    }
   } else if (text.match(/ماذا لديك سيارات/g)){
     product = listCars(cars) 
-  } else if (arrayMatch(listNames(cars), text.split(/ +/g)).length >= 1){
-product = "console"
-  } else {
+  } else if (text.match(/نعم/g) && log[log.length - 1].startsWith("هل تريد أن تستأجر السياره")) {
+    const logged = log[log.length - 1].replace(/(\?|؟|!|!|\*|في |ال|\,|،)/g, "").split(/ +/g)
+    console.log(logged)
+    const carName = arrayMatch(listNames(cars), logged)[0]
+    const carModel = arrayMatch(listModels(cars), logged)[0]
+    product = "تم إرسال رابط للإميل الخاص بك لإتمام الدفع و معرفه المواعيد المناسبه لإستئجار السياره "+ carName +" "+carModel
+    log = []
+    // Inquiry phase
+  } /*else if ( ){
+
+  } */else {
     // If all else fails: random alternative
     product = alternative[Math.floor(Math.random() * alternative.length)];
   }
   // Update DOM
+
+  log.push(product)
   addChat(input, product);
 }
 
@@ -157,7 +172,7 @@ function bot(product) {
 
 function listCars(cars){
   let list = cars
-  .map(row => `${row.name} مديل  ${row.model} سنت ${row.year}`)
+  .map(x => `    #${carList.indexOf(x)+1} ${x.name} مديل  ${x.model} سنت ${x.year}`)
   .join("\n")
   return list
 }
@@ -193,3 +208,5 @@ function arrayMatch(arr1, arr2) {
    
   return arr;  
 }
+
+       
