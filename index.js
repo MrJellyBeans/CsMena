@@ -21,7 +21,7 @@ function output(input) {
   let text = input
   text = text
     .replace(/ايش في/g, "ماذا لديك")
-    .replace(/(\?|؟|!|!|\*|في |ال|\,|،|\.)/g, "")
+    .replace(/(\?|؟|!|!|\*|في|\,|،|\.)/g, "")
     .replace(/ +/g, " ")
     .replace(/(كيفك|كيف الحال)/g, "كيف الحياة")
     .replace(/(أ|إ|آ)/g, "ا")
@@ -88,13 +88,13 @@ function output(input) {
     
   } else if (arrayMatch(stuff, text.split(/ +/g)).length >= 1){
     product = "للإستفسار عن الموقع او المواعيد المتاحه أرجو زياره موقعنا الرأيسي\n :من خلال الرابط التالي"
-  } else {
+  } else if (text.split(/ +/g).includes("شراء")){
+    product = "بعتذر لاكن نحن فقط نزود خدمة الآجار وليس البيع"
+  }else {
     // If all else fails: random alternative
-    console.log(text)
     product = alternative[Math.floor(Math.random() * alternative.length)];
   }
   // Update DOM
-
   log.push(product)
   addChat(input, product);
 }
